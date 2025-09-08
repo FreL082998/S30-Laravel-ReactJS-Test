@@ -3,6 +3,7 @@ import usersReducer from '../modules/users/redux/users';
 
 export const store = configureStore({
   reducer: {
+    users: usersReducer
   }
 });
 

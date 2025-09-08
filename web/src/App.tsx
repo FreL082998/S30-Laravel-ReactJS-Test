@@ -1,5 +1,8 @@
 import React from 'react';
 import { Routes, Route, Link, Navigate } from 'react-router-dom';
+import UserForm from './modules/users/components/UserForm';
+import UserList from './modules/users/components/UserList';
+
 export default function App() {
   return (
     <div className="max-w-4xl mx-auto p-6 font-sans">
@@ -10,6 +13,14 @@ export default function App() {
           <Link to="/users/Author" className="text-blue-600 hover:underline">Users by Role</Link>
         </nav>
       </header>
+
+      <main>
+        <Routes>
+          <Route path="/" element={<Navigate to="/create" replace />} />
+          <Route path="/create" element={<UserForm />} />
+          <Route path="/users/:role" element={<UserList />} />
+        </Routes>
+      </main>
     </div>
   );
 }
