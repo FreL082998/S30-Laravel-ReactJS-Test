@@ -29,7 +29,7 @@ const UserForm: React.FC = () => {
 
     try {
       await dispatch(createUser({ full_name: fullName, email, roles })).unwrap();
-      navigate(`/users/${roles[0]}`);
+      navigate(`/users`);
     } catch (err: any) {
       setError(err?.message || 'Failed to create user');
     }
