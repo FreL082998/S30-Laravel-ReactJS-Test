@@ -10,7 +10,7 @@ export default function App() {
         <h1 className="text-2xl font-bold text-gray-800">Users & Roles</h1>
         <nav className="flex gap-6">
           <Link to="/create" className="text-blue-600 hover:underline">Create User</Link>
-          <Link to="/users/Author" className="text-blue-600 hover:underline">Users by Role</Link>
+          <Link to="/users" className="text-blue-600 hover:underline">List of Users</Link>
         </nav>
       </header>
 
@@ -18,7 +18,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="/create" replace />} />
           <Route path="/create" element={<UserForm />} />
-          <Route path="/users/:role" element={<UserList />} />
+          <Route path="/users" element={<UserList />} />
         </Routes>
       </main>
     </div>

@@ -14,6 +14,17 @@ const initialState: UsersState = {
   error: null
 };
 
+export const fetchUsers = createAsyncThunk<User[], string | undefined>(
+  'users/fetch',
+  async (query, thunkAPI) => {
+    try {
+      return await userService.getUsers(query);
+    } catch (err: any) {
+      return thunkAPI.rejectWithValue(err?.response?.data?.message || err.message);
+    }
+  }
+);
+
 export const fetchUsersByRole = createAsyncThunk<User[], string>(
   'users/fetchByRole',
   async (role, thunkAPI) => {

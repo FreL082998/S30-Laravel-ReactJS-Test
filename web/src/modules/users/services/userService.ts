@@ -8,7 +8,14 @@ export const userService = {
   },
 
   async getUsersByRole(role: string): Promise<User[]> {
-    const res = await api.get(`/users/${encodeURIComponent(role)}`);
+    const res = await api.get(`/users/role/${encodeURIComponent(role)}`);
+    return res.data.data as User[];
+  },
+
+  async getUsers(query?: string): Promise<User[]> {
+    const res = await api.get('/users', {
+      params: query ? { q: query } : {},
+    });
     return res.data.data as User[];
   }
 };
