@@ -1,0 +1,60 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      args:
+        API_PATH: ${API_PATH}
+        API_PORT: ${API_PORT}
+        DB_PORT: ${DB_PORT}
+      context: .
+      dockerfile: ./docker/api/Dockerfile
+    image: ${APP_NAME}-api
+    container_name: ${APP_NAME}-api
+    restart: unless-stopped
+    volumes:
+      - ./${API_PATH}:/var/www/${API_PATH}
+      - /var/www/${API_PATH}/storage
+      - /var/www/${API_PATH}/vendor
+    networks:
+      - system
+
+  db:
+    image: ${DB_CONNECTION}:${DB_VERSION}
+    container_name: ${APP_NAME}-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+      SERVICE_TAGS: dev
+      SERVICE_NAME: ${DB_CONNECTION}
+    volumes:
+      - ./docker/mysql/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+      - ./docker/mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    networks:
+      - system
+
+  nginx:
+    image: nginx:latest
+    container_name: ${APP_NAME}-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx/default.conf.template:/etc/nginx/templates/default.conf.template
+      - ./${API_PATH}:/var/www/${API_PATH}
+    environment:
+      - SERVER_NAME=${SERVER_NAME}
+      - API_PATH=${API_PATH}
+      - API_PORT=${API_PORT}
+    command: [ "/bin/sh", "-c", "envsubst '$$SERVER_NAME $$API_PATH $$API_PORT' < /etc/nginx/templates/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'" ]
+    networks:
+      - system
+
+networks:
+  system:
+    driver: bridge
