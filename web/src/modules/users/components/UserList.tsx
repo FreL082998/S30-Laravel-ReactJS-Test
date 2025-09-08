@@ -16,34 +16,50 @@ const UserList: React.FC = () => {
   }, [selectedRole, dispatch]);
 
   return (
-    <div className="bg-white shadow rounded-lg p-6">
-      <div className="mb-4">
-        <label className="mr-2 font-medium">Filter by Role:</label>
-        <select
-          value={selectedRole}
-          onChange={(e) => setSelectedRole(e.target.value)}
-          className="border p-2 rounded"
-        >
-          {roles.map((role) => (
-            <option key={role} value={role}>
-              {role.charAt(0).toUpperCase() + role.slice(1)}
-            </option>
-          ))}
-        </select>
+    <div className="max-w-3xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-xl border border-gray-100">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+        <h2 className="text-xl font-semibold text-gray-800 mb-2 sm:mb-0">Users</h2>
+        <div className="flex items-center space-x-2">
+          <label htmlFor="role" className="font-medium text-gray-700">
+            Filter by Role:
+          </label>
+          <select
+            id="role"
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
+          >
+            {roles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
-      {status === 'loading' && <p className="text-gray-500">Loading...</p>}
-      {error && <p className="text-red-600">{error}</p>}
+      {status === 'loading' && (
+        <p className="text-gray-500 text-center py-4">Loading users...</p>
+      )}
 
-      {list.length === 0 ? (
-        <p className="text-gray-500">No users found</p>
+      {error && (
+        <p className="text-red-600 bg-red-50 p-3 rounded-md border border-red-100 mb-4">{error}</p>
+      )}
+
+      {list.length === 0 && status !== 'loading' ? (
+        <p className="text-gray-500 text-center py-4">No users found</p>
       ) : (
-        <ul className="space-y-3">
-          {list.map((u) => (
-            <li key={u.id} className="p-3 border rounded-md hover:bg-gray-50">
-              <p className="font-medium">{u.full_name}</p>
-              <p className="text-sm text-gray-600">{u.email}</p>
-              <p className="text-xs text-gray-500">Roles: {u.roles.join(', ')}</p>
+        <ul className="space-y-4">
+          {list.map((user) => (
+            <li
+              key={user.id}
+              className="p-4 border rounded-lg shadow-sm hover:shadow-md transition-all duration-200 hover:bg-gray-50"
+            >
+              <p className="font-medium text-gray-800">{user.full_name}</p>
+              <p className="text-sm text-gray-600">{user.email}</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Roles: {user.roles.join(', ')}
+              </p>
             </li>
           ))}
         </ul>
